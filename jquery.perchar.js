@@ -2,7 +2,7 @@
  * Perchar.js
  * https://github.com/blackjk3/jquery.perchar
  *
- * Copyright 2011, Jason Karmas
+ * Copyright 2011, Jason Kadrmas
  * Released under the GPL Version 2 license.
  *
  * Includes Lettering.JS
