@@ -1,8 +1,36 @@
+/*!
+ * Perchar.js
+ * https://github.com/blackjk3/jquery.perchar
+ *
+ * Copyright 2011, Jason Karmas
+ * Released under the GPL Version 2 license.
+ *
+ * Includes Lettering.JS
+ * Copyright 2010, Dave Rupert http://daverupert.com
+ * Released under the WTFPL license 
+ * http://sam.zoy.org/wtfpl/
+ *
+ */
+
 (function($){
 	
-	// Control functions
+	var percharSheet = {};
+	initPerchar();
+	
+	//
+	// Init the style tag that we are going to use to generate each style.
 	//
 	
+	function initPerchar() {
+		var head = document.getElementsByTagName('head')[0];
+    	percharSheet = document.createElement('style');
+    	percharSheet.type = 'text/css';
+		head.appendChild(percharSheet);
+	}	
+	
+	// Animation function
+	//
+		
 	$.fn.animatePrechar = function(duration, easing, letterDelay) {
 		$.each($(this).children(), function(index, value){
 		  var that = $(this);
@@ -13,7 +41,7 @@
     	});
 	};
 	
-	// Animation setup functions
+	// Perchar setup
 	//
 	
 	$.fn.perchar = function(start, stop, method){
@@ -24,8 +52,6 @@
 			addStyle($this.attr('id'), value, start, stop);
 		});
 	};
-	
-	$.fn.perchar.style = {};
 	
 	$.fn.animatePreCharWithCss = function(speed, easing, callback) {
 	   var optall = jQuery.speed(speed, easing, callback);  
@@ -48,7 +74,7 @@
 	          'transition': 'all ' + optall.duration + 's ' + optall.easing,  
 	  });
   
-  	  this.addClass('transition');
+  	  this.addClass('perchar-transition');
 
 	  // Reset the transition when done.
 	  var self = this;
@@ -66,19 +92,6 @@
 	      optall.complete.apply(self);
 	  	}, optall.duration*1000);
 	 }
-
-	//
-	// Init the style tag that we are going to use to generate each style.
-	//
-	
-	function initPerchar() {
-		var head = document.getElementsByTagName('head')[0];
-    	$.fn.perchar.style = document.createElement('style');
-    	$.fn.perchar.style.type = 'text/css';
-		head.appendChild($.fn.perchar.style);
-	}
-	
-	initPerchar();
 	
 	//
 	// Add styles
@@ -94,7 +107,7 @@
 		stop = stop.replace( /\$\{([^\}]*)\}/g, processReplace);
 		
 		addRule(klass, start);
-		addRule(klass+'.transition', stop);
+		addRule(klass+'.perchar-transition', stop);
 		
 	};
 	
@@ -104,18 +117,18 @@
 	}
 	
 	function addRule(ident, style) {
-		if($.fn.perchar.style.sheet.insertRule) {
+		if(percharSheet.sheet.insertRule) {
 			// Do this the WC3 way.
-			$.fn.perchar.style.sheet.insertRule(ident + ' {' + style + '}',$.fn.perchar.style.sheet.cssRules.length);
+			percharSheet.sheet.insertRule(ident + ' {' + style + '}',percharSheet.sheet.cssRules.length);
 		} else {
 			// MS way.
-			$.fn.perchar.style.sheet.addRule(ident, style);
+			percharSheet.sheet.addRule(ident, style);
 		}
 	};
 	
 	/*
-		Combining with the jquery.lettering plugin.
-		jquery.lettering code below.	
+		Combining with modified jquery.lettering plugin.
+		Modified jquery.lettering code below.	
 	*/
 	function injector(t, splitter, klass, after) {
 		
@@ -123,7 +136,7 @@
 		if (a.length) {
 			$(a).each(function(i, item) {
 				inject += '<span class="'+klass+(i+1)+'">'+item+'</span>'+after;
-				if(klass === "word"){
+				if(klass === "perword"){
 					inject += '<span>&nbsp;</span>'+after;
 				}
 			});	
@@ -146,7 +159,7 @@
 		init : function() {
 
 			return this.each(function() {
-				injector($(this), '', 'char', '');
+				injector($(this), '', 'perchar', '');
 			});
 
 		},
@@ -154,7 +167,7 @@
 		words : function() {
 
 			return this.each(function() {
-				injector($(this), ' ', 'word', ' ');
+				injector($(this), ' ', 'perword', ' ');
 			});
 
 		},
@@ -167,7 +180,7 @@
 				// (*ahem* IE *ahem*), we replaces all <br/> instances with an md5 hash 
 				// (of the word "split").  If you're trying to use this plugin on that 
 				// md5 hash string, it will fail because you're being ridiculous.
-				injector($(this).children("br").replaceWith(r).end(), r, 'line', '');
+				injector($(this).children("br").replaceWith(r).end(), r, 'perline', '');
 			});
 
 		}
