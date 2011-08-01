@@ -31,7 +31,7 @@
 	// Animation function
 	//
 		
-	$.fn.animatePrechar = function(duration, easing, letterDelay) {
+	$.fn.animatePerchar = function(duration, easing, letterDelay) {
 		$.each($(this).children(), function(index, value){
 		  var that = $(this);
 		  setTimeout(
